@@ -21,4 +21,4 @@ def generate_instance(n, filename="plik_wejsciowy.txt", due_date_factor=1.5):
 
 
 for i in range(1, 11):
-    generate_instance(i * 50, f"instances/151776_{i*50}.in")  # Generates instances with 50, 100, ..., 500 tasks
+    generate_instance(i * 50, f"input/151776_{i*50}.in")  # Generates instances with 50, 100, ..., 500 tasks
