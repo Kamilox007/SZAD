@@ -1,4 +1,6 @@
 import os
+import time
+import math
 
 def greedy(n,tasks,setup_times):
     
@@ -80,8 +82,12 @@ def main():
                 setup_times.append(list(map(int, lines[i].strip().split())))
 
             # Run the greedy algorithm
+            start_time = time.time()
             total_late_work, task_order = greedy(n, tasks, setup_times)
-
+            end_time = time.time()
+            print(end_time)
+            print(start_time)
+            elapsed_time_ms = math.ceil((end_time - start_time) * 1000)
             # Extract the <nr_albumu_zad> part from the input file name (before the underscore '_')
             input_file_name = os.path.basename(input_file).split(".")[0]
             nr_albumu_zad = input_file_name.split("_")[0]
@@ -94,6 +100,7 @@ def main():
             output_file = f"{subfolder_path}/151776_{input_file_name}.out"
 
             # Write the results to the output file
+            print(f"Processed: {input_file}, Execution time: {elapsed_time_ms} ms\n")
             with open(output_file, "w") as f_out:
                 f_out.write(f"{total_late_work}\n")
                 f_out.write(f"{' '.join(map(str, task_order))}\n")
