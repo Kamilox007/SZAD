@@ -57,35 +57,46 @@ def main():
     # List all files in the input folder
     input_files = os.listdir(input_folder)
 
-    for input_file in input_files:
-        file_path = os.path.join(input_folder, input_file)
+    for root, dirs, files in os.walk(input_folder):
+        for input_file in files:
+            # Full path of the input file
+            file_path = os.path.join(root, input_file)
 
-        # Read input file
-        with open(file_path, "r") as f:
-            lines = f.readlines()
+            # Read input file
+            with open(file_path, "r") as f:
+                lines = f.readlines()
 
-        n = int(lines[0].strip())  # number of tasks
-        tasks = []
+            n = int(lines[0].strip())  # number of tasks
+            tasks = []
 
-        # Read processing times and due dates
-        for i in range(1, n+1):
-            p, d = map(int, lines[i].strip().split())
-            tasks.append((p, d))
-        # Read setup times matrix
+            # Read processing times and due dates
+            for i in range(1, n + 1):
+                p, d = map(int, lines[i].strip().split())
+                tasks.append((p, d))
 
-        setup_times = []
-        for i in range(n + 1, 2 * n + 1):
-            setup_times.append(list(map(int, lines[i].strip().split())))
+            # Read setup times matrix
+            setup_times = []
+            for i in range(n + 1, 2 * n + 1):
+                setup_times.append(list(map(int, lines[i].strip().split())))
 
-        # Run the greedy algorithm
-        total_late_work, task_order = greedy(n, tasks, setup_times)
+            # Run the greedy algorithm
+            total_late_work, task_order = greedy(n, tasks, setup_times)
 
-        input_file_name = os.path.basename(input_file).split(".")[0]
-        output_file = f"{output_folder}/{input_file_name}.out"
+            # Extract the <nr_albumu_zad> part from the input file name (before the underscore '_')
+            input_file_name = os.path.basename(input_file).split(".")[0]
+            nr_albumu_zad = input_file_name.split("_")[0]
 
-        with open(output_file, "w") as f_out:
-            f_out.write(f"{total_late_work}\n")
-            f_out.write(f"{' '.join(map(str, task_order))}\n")
+            # Create a subfolder in the output folder named after nr_albumu_zad
+            subfolder_path = os.path.join(output_folder, nr_albumu_zad)
+            os.makedirs(subfolder_path, exist_ok=True)
+
+            # Create the output file name in the format 151776_<nr_albumu_zad>_<rozmiar>.out
+            output_file = f"{subfolder_path}/151776_{input_file_name}.out"
+
+            # Write the results to the output file
+            with open(output_file, "w") as f_out:
+                f_out.write(f"{total_late_work}\n")
+                f_out.write(f"{' '.join(map(str, task_order))}\n")
 
 
 if __name__ == "__main__":
